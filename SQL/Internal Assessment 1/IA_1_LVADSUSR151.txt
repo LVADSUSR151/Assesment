@@ -1,0 +1,61 @@
+1.
+
+select customerid,dataused, avg(dataused) from customerinteractions
+where month = 'March'and year= '2024'
+group by customerid 
+having dataused > avg(dataused);
+
+
+
+
+2.select customerid,(select callduration from customerinteractions where month = 'February' and year = '2024' group by customerid) as callfeb,
+(select callduration from customerinteractions where month = 'March' and year = '2024' group by customerid) as callmar from customerinteractions
+where callfeb < callmar;
+
+
+3.
+select c1.customerid from customerinteractions c1 self join customerinteractions c2
+using(customerid)
+group by c1.customerid
+having sum(c1.massagecount) < sum(c2.massagecount);
+
+
+
+
+4.SELECT ProductTypeID ,sum(TotalSalesAmount) as sales from quarterlysales
+where ProductTypeID = 1
+group by ProductTypeID;
+
+
+
+5.SELECT ProductTypeID ,sum(TotalSalesAmount) as sales from quarterlysales
+group by ProductTypeID
+order by  sales ;
+
+6.
+SELECT ProductTypeID ,avg(TotalSalesAmount) as avg from quarterlysales
+where ProductTypeID = 1 and Quarter= 'Q2';
+
+
+
+
+7.select region, avg(consumptionKWh) as aa from sectorenergyconsumption 
+where month = "march" and  year ='2024'
+and  consumptionKWh > aa;
+
+
+8.select sector from  sectorenergyconsumption
+where (select ConsumptionKWh from  sectorenergyconsumption where month = 'February' limit 1 ) <
+ (select ConsumptionKWh from  sectorenergyconsumption where month = 'March' limit 1 );
+
+
+9. select EnergySource, sum(ConsumptionKWh) from sectorenergyconsumption
+ group by EnergySource;
+
+
+10.select avg(FeedbackScore) from insuranceactivities;
+select CustomerName from insuranceactivities where FeedbackScore >8;
+
+
+11.select sum(AnnualPremium) from insuranceactivities where FeedbackScore >8
+and ClaimsCount >0 ;
