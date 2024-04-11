@@ -1,0 +1,99 @@
+Dheeraj Bhardwaj SQL Internal Assessment 2
+
+
+1.select machine_id,sum(cost) as costs from l1_maintenance_records where month(maintenance_date) = 3
+group by machine_id
+having costs> avg(cost);
+
+
+2.select maintenance_type , count(maintenance_type) 
+from l1_maintenance_records where month(maintenance_date) = 3
+group by maintenance_type;
+
+
+3.select technician_name,count(technician_name) as trasks_done,avg(cost) as Avg_cost
+from l1_maintenance_records where month(maintenance_date) = 3
+group by technician_name 
+order by Avg_cost;
+
+4.select product_id, round((avg(incident_count_pre_update)-avg(incident_count_post_update)),1) 
+as effectiveness from l2_updates
+group by product_id;
+
+
+
+
+5.select update_id,user_feedback_score from l2_updates 
+group by update_id
+order by user_feedback_score desc;
+
+
+
+
+6.select product_id,(incident_count_pre_update - incident_count_post_update) as improvement 
+from l2_updates
+group by product_id,improvement
+order by improvement asc limit 1;
+
+
+=:product with ProductID P100 has the leat improvement.
+
+
+
+
+
+7.create view aaaaa as
+select p.patient_name,f.facility_name,v.reason_for_visit,t.outcome
+ from l3_patients p join l3_visits v using(patient_id) join l3_facilities f  using(facility_id)
+ join l3_treatments t using(visit_id)
+ where month(v.visit_date) = 3 and Year(v.visit_date) = 2024;
+
+
+
+
+
+8.select f.facility_name,count(f.facility_id) 
+ from l3_visits v join l3_facilities f using(facility_id)
+ where v.reason_for_visit ="Emergency" and month(v.visit_date) = 3 and year(v.visit_date) =2024
+ group by f.facility_name ;
+
+
+
+
+
+9. select p.insurance_provider
+ from l3_patients p join l3_visits v using(patient_id) join l3_treatments t using(visit_id)
+ where quarter(v.visit_date) =1 and t.outcome = 'Complicated';
+
+
+
+10.select p.category,p.product_name,sum(s.quantity) from l4_products p 
+ join l4_sales s using(product_id)
+ where month(s.sale_date) = 3 and Year(sale_date) =2024
+ group  by  p.category,p.product_name
+ order by sum(s.quantity) desc;
+
+
+
+11. create view see as 
+     select st.region, sum(p.price*s.quantity) as sales
+     from l4_sales s join l4_stores st using(store_id) join l4_products p using(product_id)
+     where Quarter(sale_date) =1 and year(sale_date) = 2024
+     group by st.region;
+ 
+ select * from see order by sales desc limit 1;
+
+
+
+
+
+12.select p.product_name
+from l4_products p  full outer join l4_sales s using(product_id)
+ full outer join l4_stores st using(store_id)
+where p.product_id not in( select product_id from l4_sales) and 
+month(s.sale_date) = 3 and Year(s.sale_date) = 2024;
+union
+select st.region
+from l4_products p  full outer join l4_sales s using(product_id)
+where st.store_id not in( select st.store_id  from l4_sales) and 
+month(s.sale_date) = 3 and Year(s.sale_date) = 2024;
